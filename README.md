@@ -2,10 +2,10 @@
 
 A minimal chat app solution Built with React Native and Firebase.
 
-* Getting started
+Getting started
 
-Add your firebase config to the firebaseConfig.ts file.
+* Add your firebase config to the firebaseConfig.ts file.
 
-npm run start
+* npm run start
 
 that's it.
