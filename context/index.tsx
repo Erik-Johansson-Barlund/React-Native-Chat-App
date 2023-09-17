@@ -20,6 +20,7 @@ import {
 
 const COLLECTION_NAME = 'ErikJohanssonTestAppCollection';
 const FILTER_DATETIME = 'dateTime';
+const MESSAGES_LIMIT = 25;
 
 /**
  * App context provider, talks to firebase and stores values 
@@ -38,7 +39,7 @@ function AppProvider({ children }: { children: React.ReactNode }): React.JSX.Ele
    * Mount a listener that listens to changes in message collection and updates the state
    */
   useEffect(() => {
-    const q = query(collection(firestoreDB, COLLECTION_NAME), orderBy(FILTER_DATETIME), limitToLast(25));
+    const q = query(collection(firestoreDB, COLLECTION_NAME), orderBy(FILTER_DATETIME), limitToLast(MESSAGES_LIMIT));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
 
       querySnapshot.docChanges().forEach((change) => {
@@ -75,12 +76,12 @@ function AppProvider({ children }: { children: React.ReactNode }): React.JSX.Ele
    * Gets new messages that are not loaded in yet in batches of 25 and adds to the messages state
    */
   async function getOlderMessages(): Promise<void> {
-    if (messages.length < 25) {
+    if (messages.length < MESSAGES_LIMIT) {
       return;
     }
     const snapshot = await getCountFromServer(collection(firestoreDB, COLLECTION_NAME));
-    const messagesToGet = snapshot.data().count > messages.length + 25
-      ? 25
+    const messagesToGet = snapshot.data().count > messages.length + MESSAGES_LIMIT
+      ? MESSAGES_LIMIT
       : snapshot.data().count - messages.length;
 
     if (messagesToGet === 0) {
